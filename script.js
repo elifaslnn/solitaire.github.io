@@ -258,10 +258,10 @@ function dealTheCards(array, colArrays) {
         ul.appendChild(li);
       }
     } else {
-      for (let j = 0; j < 5; j++) {
+      for (let j = 0; j < 2; j++) {
         const obj = array.pop();
         const number = obj.number;
-        if (j === 4) {
+        if (j === 1) {
           obj.img = `assets/spades/${number}.png`; // Kartı aç
           obj.showCard = true;
         } else {
@@ -306,7 +306,10 @@ function dealTheCards(array, colArrays) {
       const addarrId = event.target.parentNode.parentNode.id.match(/\d+/)[0]; //eklenecek col
       const draggedId = parseInt(dragged.id.match(/\d+/)[0], 10) - 1;
       const addUl = event.target.parentNode.parentNode;
-      console.log(addUl);
+      console.log(addUl.childNodes[0].id);
+      if (addUl.childNodes[0].id == "demo") {
+        addUl.removeChild(addUl.childNodes[0]);
+      }
       const decUl = dragged.parentNode;
       if (
         eklenebilirmiSayisal(
@@ -349,12 +352,11 @@ function dealTheCards(array, colArrays) {
           decUl.removeChild(removedLi);
           addUl.appendChild(removedLi);
 
-          console.log(decUl.childNodes.lenght);
-
           if (decUl.childNodes.length == 0) {
             console.log("array boş");
             const demoLi = document.createElement("li");
-            const img = document.createElement("div");
+            demoLi.id = "demo";
+            const img = document.createElement("img");
             img.style.height = "80px";
             demoLi.appendChild(img);
             decUl.appendChild(demoLi);
