@@ -1,0 +1,1 @@
+# solitaire.github.io
