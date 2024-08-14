@@ -258,10 +258,10 @@ function dealTheCards(array, colArrays) {
         ul.appendChild(li);
       }
     } else {
-      for (let j = 0; j < 2; j++) {
+      for (let j = 0; j < 5; j++) {
         const obj = array.pop();
         const number = obj.number;
-        if (j === 1) {
+        if (j === 4) {
           obj.img = `assets/spades/${number}.png`; // Kartı aç
           obj.showCard = true;
         } else {
