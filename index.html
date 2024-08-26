@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Spider Solitaire</title>
     <link rel="stylesheet" href="style.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -13,41 +13,59 @@
     />
   </head>
   <body>
-    <div class="gameContain">
+    <div class="gameContain bg-dark">
+      <!-- Başlangıç Ekranı -->
       <div class="startGameModal">
-        <div class="card" style="background-color: black; color: white">
-          <div class="card-header">Game Options</div>
-          <div class="card-body">
-            <button id="oneSuit">One Suit</button>
-            <button id="twoSuit">Two Suits</button>
-            <button id="fourSuit">Four Suits</button>
-            <p>Select game option and start</p>
-            <a
-              href="#"
-              id="startGameBtn"
-              class="btn btn-primary"
-              style="background-color: (0, 30, 255)"
+        <div class="card text-white bg-light">
+          <div class="card-header text-center" style="color: black">
+            <h3>Game Options</h3>
+          </div>
+          <div class="card-body text-center">
+            <button id="oneSuit" class="btn btn-outline-light m-2">
+              One Suit
+            </button>
+            <button id="twoSuit" class="btn btn-outline-light m-2">
+              Two Suits
+            </button>
+            <button id="fourSuit" class="btn btn-outline-light m-2">
+              Four Suits
+            </button>
+            <p class="mt-3">Select game option and start</p>
+            <a href="#" id="startGameBtn" class="btn btn-primary mt-2"
               >Start Game</a
             >
           </div>
         </div>
       </div>
-      <div class="gameArea" style="width: 100%">
-        <div class="navbar">
-          <ul style="list-style: none; display: flex">
-            <li id="gameTitle">Spider One Suit</li>
-            <li>Score:0</li>
-            <li>time:00.00</li>
-            <li><button>PAUSE</button></li>
-          </ul>
-        </div>
+
+      <!-- Oyun Alanı -->
+      <div class="gameArea" style="width: 100%; display: none">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div class="container-fluid">
+            <a class="navbar-brand" id="gameTitle" href="#">Spider One Suit</a>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" href="#" id="skor">Score: 0</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" id="time">Time: 00:00</a>
+              </li>
+            </ul>
+            <button class="btn btn-outline-light" id="pauseBtn" type="button">
+              PAUSE
+            </button>
+          </div>
+        </nav>
+
+        <!-- Oyun Kartları -->
         <div class="container text-center" style="width: 100%">
           <div
             class="row stockAndSets"
             style="margin-bottom: 5rem; margin-top: 2rem; height: max"
           >
             <div class="col-2 stock">
-              <ul style="list-style: none; display: flex">
+              <ul class="list-unstyled d-flex">
                 <li id="stock1">
                   <img src="assets/backgroundCard/classic_blue.png" alt="" />
                 </li>
@@ -74,15 +92,9 @@
             <div class="col" id="set7"></div>
             <div class="col" id="set8"></div>
           </div>
-          <div
-            class="row cardRow"
-            style="
-              width: 100%;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            "
-          >
+
+          <!-- Kart Sırası -->
+          <div class="row cardRow justify-content-center" style="width: 100%">
             <div class="col cardRowCol" id="cardRow1"></div>
             <div class="col cardRowCol" id="cardRow2"></div>
             <div class="col cardRowCol" id="cardRow3"></div>
@@ -95,15 +107,138 @@
             <div class="col cardRowCol" id="cardRow10"></div>
           </div>
         </div>
-        <div class="menuOptions">
-          <ul style="list-style: none; display: flex">
-            <li><button>Settings</button></li>
-            <li><button>Hint</button></li>
-            <li><button>Undo</button></li>
-          </ul>
+
+        <!-- Menü Seçenekleri -->
+        <div class="menuOptions mt-4 text-center">
+          <div class="btn-group" role="group">
+            <button class="btn btn-secondary" id="settingBtn">Settings</button>
+            <button class="btn btn-secondary" id="hintBtn">Hint</button>
+            <button class="btn btn-secondary" id="undoBtn">Undo</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal" id="pauseModal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body">
+              <p>Select the option</p>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+                id="contGameBtn"
+              >
+                Continue Game
+              </button>
+              <button type="button" class="btn btn-primary" id="exitGameBtn">
+                Exit Game
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal" id="settingModal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Select the background</h5>
+            </div>
+            <div
+              class="modal-body"
+              id="settingModalBody"
+              style="display: flex; flex-direction: row"
+            >
+              <div
+                class="card"
+                style="width: 5rem; margin: 10px; cursor: pointer"
+                id="blueCard"
+              >
+                <img
+                  src="assets/backgroundCard/classic_blue.png"
+                  class="card-img-top"
+                  alt="..."
+                  id="classic_blue"
+                />
+              </div>
+              <div
+                class="card"
+                style="width: 5rem; margin: 10px; cursor: pointer"
+                id="brownCard"
+              >
+                <img
+                  src="assets/backgroundCard/classic_brown.png"
+                  class="card-img-top"
+                  alt="..."
+                  id="classic_brown"
+                />
+              </div>
+              <div
+                class="card"
+                style="width: 5rem; margin: 10px; cursor: pointer"
+                id="greenCard"
+              >
+                <img
+                  src="assets/backgroundCard/classic_green.png"
+                  class="card-img-top"
+                  alt="..."
+                  id="classic_green"
+                />
+              </div>
+              <div
+                class="card"
+                style="width: 5rem; margin: 10px; cursor: pointer"
+                id="redCard"
+              >
+                <img
+                  src="assets/backgroundCard/classic_red.png"
+                  class="card-img-top"
+                  alt="..."
+                  id="classic_red"
+                />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" id="exitSettingBtn">
+                Exit
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal" id="lostModal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body">
+              <p>Lost the Game</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" id="newGameBtn">
+                New Game
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal" id="wonModal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body">
+              <p>You Win the Game</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" id="newGameBtn">
+                New Game
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
