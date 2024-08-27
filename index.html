@@ -64,7 +64,7 @@
             class="row stockAndSets"
             style="margin-bottom: 5rem; margin-top: 2rem; height: max"
           >
-            <div class="col-2 stock">
+            <div class="col-2 stock" id="stock">
               <ul class="list-unstyled d-flex">
                 <li id="stock1">
                   <img src="assets/backgroundCard/classic_blue.png" alt="" />
@@ -228,9 +228,13 @@
           <div class="modal-content">
             <div class="modal-body">
               <p>You Win the Game</p>
+              <br />
+              <p id="finalScor">Scor:</p>
+              <br />
+              <p id="finalTime">Time:</p>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary" id="newGameBtn">
+              <button type="button" class="btn btn-primary" id="newGameBtnWon">
                 New Game
               </button>
             </div>

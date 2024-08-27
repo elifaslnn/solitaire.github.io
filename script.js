@@ -612,58 +612,52 @@ function shuffle(array) {
 }
 
 function dealTheCards(array, colArrays) {
+  var audio = new Audio("audio/shuffle-cards.mp3");
+  audio.play();
+
+  // Get the stock and all card row elements
+  const stockElement = document.querySelector(".stock");
+  const cardRows = document.querySelectorAll(".cardRowCol");
+
+  // Iterate over each card row
   for (let i = 0; i < 10; i++) {
     const name = `cardRow${i + 1}`;
     const dom = document.querySelector(`#${name}`);
     const ul = document.createElement("ul");
     ul.id = `${name}Ul`;
     ul.className = "dropzone";
-    if (i == 0 || i == 1 || i == 2 || i == 3) {
-      for (let j = 0; j < 6; j++) {
-        const obj = array.pop();
-        const number = obj.number;
-        const cardType = obj.card;
-        if (j === 5) {
-          obj.img = `assets/${cardType}/${number}.png`; // Kartı aç
-          obj.showCard = true;
-        } else {
-          obj.img = `assets/backgroundCard/classic_blue.png`;
-        }
-        colArrays[i].push(obj);
-        const li = document.createElement("li");
-        li.id = `li${j + 1}`;
-        li.draggable = true;
-        li.style.top = `${j}rem`;
-        li.style.zIndex = `${j + 1}`;
-        const img = document.createElement("img");
-        img.src = obj.img;
-        li.appendChild(img);
-        ul.appendChild(li);
-      }
-    } else {
-      for (let j = 0; j < 5; j++) {
-        const obj = array.pop();
-        const number = obj.number;
-        const cardType = obj.card;
 
-        if (j === 4) {
-          obj.img = `assets/${cardType}/${number}.png`; // Kartı aç
-          obj.showCard = true;
-        } else {
-          obj.img = `assets/backgroundCard/classic_blue.png`;
-        }
-        colArrays[i].push(obj);
-        const li = document.createElement("li");
-        li.id = `li${j + 1}`;
-        li.draggable = true;
-        li.style.top = `${j}rem`;
-        li.style.zIndex = `${j + 1}`;
-        const img = document.createElement("img");
-        img.src = obj.img;
-        li.appendChild(img);
-        ul.appendChild(li);
+    // Determine the number of cards per row
+    const cardsPerRow = i < 4 ? 6 : 5;
+
+    for (let j = 0; j < cardsPerRow; j++) {
+      const obj = array.pop();
+      const number = obj.number;
+      const cardType = obj.card;
+
+      if (j === cardsPerRow - 1) {
+        obj.img = `assets/${cardType}/${number}.png`; // Open the card
+        obj.showCard = true;
+      } else {
+        obj.img = `assets/backgroundCard/classic_blue.png`;
       }
+
+      colArrays[i].push(obj);
+      const li = document.createElement("li");
+      li.id = `li${j + 1}`;
+      li.draggable = true;
+      li.style.top = `${j}rem`;
+      li.style.zIndex = `${j + 1}`;
+      li.style.position = "absolute"; // For smooth animation
+      const img = document.createElement("img");
+      img.src = obj.img;
+      li.appendChild(img);
+      setTimeout(() => {
+        ul.appendChild(li);
+      }, 100 * j);
     }
+
+    // Append the ul to the respective card row after cards are added
     dom.appendChild(ul);
   }
 }
@@ -756,6 +750,19 @@ let isSetCheck = false;
             gameArea.style.filter = "blur(8px)";
           }
         }
+
+        var audio = new Audio("audio/card_drop.mp3");
+        audio.play();
+
+        const hintLenght = hintObjects.length;
+        if (hintLenght > 0) {
+          for (let i = 0; i < hintLenght; i++) {
+            const obj = hintObjects.pop();
+            console.log(obj);
+            obj.style.padding = "0px";
+            obj.style.backgroundColor = "";
+          }
+        }
       } else {
         window.alert("ekleme yapamazsınız");
       }
@@ -794,6 +801,7 @@ function eklenebilirmiSayisal(col1, col2, draggerIndex) {
   return check;
 }
 
+let undoSkor;
 function sadeceSonListeAcik(kaldirilanUl, kaldirilanCol) {
   const lenght = kaldirilanUl.childNodes.length;
   kaldirilanUl.childNodes[lenght - 1];
@@ -806,7 +814,7 @@ function sadeceSonListeAcik(kaldirilanUl, kaldirilanCol) {
   kaldirilanUl.childNodes[
     lenght - 2
   ].childNodes[0].src = `assets/${type}/${number}.png`;
-
+  undoSkor = -10;
   setSkor(10);
 }
 let isStockCheck = false;
@@ -816,6 +824,9 @@ let undoMixedArray = [];
 stock.addEventListener("click", function () {
   arraysUndo = JSON.parse(JSON.stringify(arrays));
   undoMixedArray = JSON.parse(JSON.stringify(mixedArr));
+
+  var audio = new Audio("audio/stock_flip.mp3");
+  audio.play();
 
   for (let i = 0; i < 10; i++) {
     const name = `cardRow${i + 1}`;
@@ -892,6 +903,7 @@ function isSetDone(array, ul) {
     isSameType(cardTypeValues, targetSequence)
   ) {
     window.alert("Set tamamlandı!");
+    undoSkor = -100;
     setSkor(100);
     for (let i = 0; i < targetSequence.length; i++) {
       const index = array.findIndex(
@@ -934,7 +946,11 @@ function isSetDone(array, ul) {
     changeset.appendChild(img);
 
     if (sets.length == 0) {
+      document.getElementById("finalScor").innerHTML = `Scor: ${skor}`;
+
       wonModal.style.display = "block";
+      var audio = new Audio("audio/victory.mp3");
+      audio.play();
     }
   }
 }
@@ -988,6 +1004,9 @@ exitGameBtn.addEventListener("click", function () {
 document.getElementById("newGameBtn").addEventListener("click", function () {
   window.location.reload();
 });
+document.getElementById("newGameBtnWon").addEventListener("click", function () {
+  window.location.reload();
+});
 
 const skorVal = document.getElementById("skor");
 let skor = 0;
@@ -997,23 +1016,28 @@ function setSkor(skorData) {
 }
 
 undoBtn.addEventListener("click", function () {
-  arrays = JSON.parse(JSON.stringify(arraysUndo));
-  console.log(undoMixedArray);
-  if (undoMixedArray.length > 0) {
-    mixedArr = JSON.parse(JSON.stringify(undoMixedArray));
-  }
-  if (isSetCheck) {
-    console.log(sets);
-    const index = sets.length + 1; //7
-    const setsObj = document.getElementById(`set${index}`);
-    console.log(setsObj);
-    setsObj.removeChild(setsObj.childNodes[0]);
-    sets.push(`set${index}`);
-  }
-  updateUI();
-  if (isStockCheck) {
-    undoStock.style.display = "block";
-    stocks.push(undoStock);
+  if (arraysUndo.length != 0) {
+    setSkor(undoSkor);
+    var audio = new Audio("audio/undo.mp3");
+    audio.play();
+    arrays = JSON.parse(JSON.stringify(arraysUndo));
+    console.log(undoMixedArray);
+    if (undoMixedArray.length > 0) {
+      mixedArr = JSON.parse(JSON.stringify(undoMixedArray));
+    }
+    if (isSetCheck) {
+      console.log(sets);
+      const index = sets.length + 1; //7
+      const setsObj = document.getElementById(`set${index}`);
+      console.log(setsObj);
+      setsObj.removeChild(setsObj.childNodes[0]);
+      sets.push(`set${index}`);
+    }
+    updateUI();
+    if (isStockCheck) {
+      undoStock.style.display = "block";
+      stocks.push(undoStock);
+    }
   }
 });
 
