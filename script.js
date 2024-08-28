@@ -685,9 +685,7 @@ let isSetCheck = false;
       const addarrId = event.target.parentNode.parentNode.id.match(/\d+/)[0]; //eklenecek col
       const draggedId = parseInt(dragged.id.match(/\d+/)[0], 10) - 1; //silinecek ul id'si
       const addUl = event.target.parentNode.parentNode; //eklenecek ul
-      if (addUl.childNodes[0].id == "demo") {
-        addUl.removeChild(addUl.childNodes[0]);
-      }
+
       const decUl = dragged.parentNode;
       if (
         eklenebilirmiSayisal(
@@ -697,6 +695,9 @@ let isSetCheck = false;
         ) == true
       ) {
         //eklenebilir olduğunu gördük
+        if (addUl.childNodes[0].id == "demo") {
+          addUl.removeChild(addUl.childNodes[0]);
+        }
         //şimdiki halini önceki olarak değiştirelim
         if (isStockCheck) {
           isStockCheck = false;
